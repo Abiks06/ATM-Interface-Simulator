@@ -1,13 +1,13 @@
 {
-  "name": "Secure ATM Interface Simulator",
+  "name": "Secure ATM Simulator",
   "featured": true,
   "startDate": "2026-03",
-  "endDate": "2026-05",
+  "endDate": "2026-10",
   "highlights": [
-    "Modular 3D environment in React Three Fiber with custom GLSL shaders implementing Phong and Gouraud lighting.",
-    "Low-level graphics algorithms from scratch: Bresenham's line, cubic Bézier curves and Cohen–Sutherland clipping.",
-    "Finite state machine handling secure PIN entry, authentication and cash withdrawal.",
-    "Spatial audio and keyframe animation driven by manual 4×4 matrix transformations."
+    "An ATM simulator that shows how a real cash machine keeps your money safe, built around an interactive 3D machine made in Spline and driven from React over a postMessage bridge.",
+    "Real cryptography from the Web Crypto API: ISO 9564 PIN blocks encrypted with AES-256-GCM, PBKDF2-SHA256 PIN checks in constant time, and ARQC-style HMAC cryptograms that reject replayed or altered transactions.",
+    "An attack lab stages skimming, brute-force, replay and insider log-tampering attacks, and shows each defence respond, including a SHA-256 hash-chained audit journal that exposes any edit.",
+    "A pure state-machine core with hold-before-debit money handling and exact bounded-knapsack note dispensing, covered by 44 unit tests."
   ],
-  "keywords": ["Three.js", "React Three Fiber", "GLSL", "Computer Graphics", "FSM"]
+  "keywords": ["React", "Web Crypto", "Spline", "State machine", "Vitest"]
 }
