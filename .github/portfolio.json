@@ -1,0 +1,13 @@
+{
+  "name": "Secure ATM Interface Simulator",
+  "featured": true,
+  "startDate": "2026-03",
+  "endDate": "2026-05",
+  "highlights": [
+    "Modular 3D environment in React Three Fiber with custom GLSL shaders implementing Phong and Gouraud lighting.",
+    "Low-level graphics algorithms from scratch: Bresenham's line, cubic Bézier curves and Cohen–Sutherland clipping.",
+    "Finite state machine handling secure PIN entry, authentication and cash withdrawal.",
+    "Spatial audio and keyframe animation driven by manual 4×4 matrix transformations."
+  ],
+  "keywords": ["Three.js", "React Three Fiber", "GLSL", "Computer Graphics", "FSM"]
+}
