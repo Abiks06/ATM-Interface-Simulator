@@ -557,58 +557,132 @@ h3 {
 
 .mirror {
   display: grid;
-  grid-template-columns: 22px 1fr 22px;
-  gap: 8px;
+  grid-template-columns: 24px 1fr 24px;
+  grid-template-rows: minmax(92px, auto) repeat(3, 40px) auto;
+  column-gap: 8px;
   padding: 12px 8px;
   border-radius: 14px;
   background: #05070a;
   border: 1px solid var(--line);
 }
 
-.fdk-col {
-  display: grid;
-  grid-template-rows: 44px repeat(3, 1fr) 24px;
-  align-items: center;
-}
-
-.fdk-col .fdk:first-child {
-  grid-row: 2;
-}
-
-.fdk {
-  height: 14px;
-  border-radius: 3px;
-  border: 1px solid #66707c;
-  background: linear-gradient(#c9cfd6, #8d96a1);
-}
-
-.fdk.idle {
-  opacity: 0.45;
-}
-
-.fdk:active {
-  transform: translateY(1px);
-}
-
-.lcd {
-  min-height: 210px;
-  display: grid;
-  grid-template-rows: auto auto 1fr auto;
-  padding: 12px 12px 8px;
+.lcd-bg {
+  grid-column: 2;
+  grid-row: 1 / 6;
   border-radius: 6px;
   background: radial-gradient(120% 90% at 50% 0%, #143457, #0b2238 70%);
-  color: #e8fbff;
-  text-align: center;
-  font-size: 13px;
   transition: background 300ms ease;
 }
 
-.lcd.tone-alert {
+.mirror.tone-alert .lcd-bg {
   background: radial-gradient(120% 90% at 50% 0%, #5a1823, #3b1016 70%);
 }
 
-.lcd.tone-success {
+.mirror.tone-success .lcd-bg {
   background: radial-gradient(120% 90% at 50% 0%, #15513a, #0d3324 70%);
+}
+
+.lcd-head {
+  grid-column: 2;
+  grid-row: 1;
+  padding: 12px 12px 4px;
+  color: #e8fbff;
+  text-align: center;
+  font-size: 13px;
+}
+
+.opt-row {
+  grid-column: 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  align-items: center;
+  padding: 0 6px;
+}
+
+.opt {
+  height: 32px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(45, 226, 196, 0.28);
+  background: rgba(21, 64, 107, 0.92);
+  color: #e8fbff;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: left;
+  transition: background-color 140ms ease, transform 100ms ease;
+}
+
+.opt span {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.opt.left {
+  border-left: 3px solid var(--accent);
+}
+
+.opt.right {
+  justify-content: flex-end;
+  text-align: right;
+  border-right: 3px solid var(--accent);
+}
+
+.opt:hover {
+  background: #1e5a92;
+}
+
+.opt:active {
+  transform: scale(0.98);
+}
+
+.opt-num {
+  flex: none;
+  font-size: 10px;
+  padding: 0 5px;
+  color: var(--accent);
+  background: rgba(45, 226, 196, 0.12);
+  border-color: rgba(45, 226, 196, 0.35);
+}
+
+.fdk {
+  align-self: center;
+  height: 16px;
+  border-radius: 3px;
+  border: 1px solid #3a4048;
+  background: linear-gradient(#545c66, #353b43);
+  cursor: default;
+}
+
+.fdk.on {
+  border-color: #1f8a78;
+  background: linear-gradient(#8ff3e3, #2db8a0);
+  box-shadow: 0 0 10px rgba(45, 226, 196, 0.45);
+  cursor: pointer;
+}
+
+.fdk.on:active {
+  transform: translateY(1px);
+}
+
+.lcd-foot {
+  grid-column: 2;
+  grid-row: 5;
+  padding: 6px 0 8px;
+  font-size: 10px;
+  text-align: center;
+  color: #8fb3c9;
+}
+
+.mirror-hint {
+  margin: -6px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
 }
 
 .lcd-title {
@@ -644,28 +718,6 @@ h3 {
   to {
     background-position: -100% 0;
   }
-}
-
-.lcd-options {
-  display: grid;
-  grid-template-rows: repeat(3, 1fr);
-  align-content: end;
-  gap: 2px;
-  font-weight: 600;
-  font-size: 12px;
-}
-
-.lcd-row {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  min-height: 18px;
-}
-
-.lcd-footer {
-  font-size: 10px;
-  color: #8fb3c9;
-  margin-top: 6px;
 }
 
 .hw-actions {

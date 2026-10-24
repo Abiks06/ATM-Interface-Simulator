@@ -1,4 +1,6 @@
+import { Fragment } from 'react';
 import { S } from '../core/machine.js';
+import { SLOTS } from '../core/screens.js';
 
 const KEYS = [
   ['1', '2', '3', 'cancel'],
@@ -8,46 +10,66 @@ const KEYS = [
 ];
 const KEY_LABEL = { cancel: 'Cancel', clear: 'Clear', enter: 'Enter' };
 
+// The screen mirror is a grid: each option row shares a row with its side key, so the button,
+// its number shortcut and the lit key always line up.
 function Mirror({ model, onSlot }) {
   const slot = (id) => model.options.find((o) => o.slot === id);
-  const side = (prefix) =>
-    ['2', '3', '4'].map((row) => {
-      const o = slot(prefix + row);
-      return (
-        <button
-          key={row}
-          className={o ? 'fdk' : 'fdk idle'}
-          onClick={() => onSlot(prefix + row)}
-          aria-label={o ? o.label : `Side key ${prefix}${row}`}
-          tabIndex={o ? 0 : -1}
-        />
-      );
-    });
+  const sideKey = (id, row) => {
+    const o = slot(id);
+    return (
+      <button
+        className={o ? 'fdk on' : 'fdk'}
+        style={{ gridRow: row, gridColumn: id[0] === 'L' ? 1 : 3 }}
+        onClick={() => onSlot(id)}
+        aria-label={o ? `Side key: ${o.label}` : 'Side key (unused)'}
+        tabIndex={o ? 0 : -1}
+      />
+    );
+  };
+  const option = (id) => {
+    const o = slot(id);
+    if (!o) return <span />;
+    const num = <kbd className="opt-num">{SLOTS.indexOf(id) + 1}</kbd>;
+    return (
+      <button className={id[0] === 'L' ? 'opt left' : 'opt right'} onClick={() => onSlot(id)}>
+        {id[0] === 'L' ? (
+          <>
+            {num}
+            <span>{o.label}</span>
+          </>
+        ) : (
+          <>
+            <span>{o.label}</span>
+            {num}
+          </>
+        )}
+      </button>
+    );
+  };
 
   return (
-    <div className="mirror">
-      <div className="fdk-col">{side('L')}</div>
-      <div className={`lcd tone-${model.tone}`} aria-live="polite">
+    <div className={`mirror tone-${model.tone}`}>
+      <div className="lcd-bg" aria-hidden="true" />
+      <div className="lcd-head" aria-live="polite">
         <div className="lcd-title">{model.title}</div>
-        <div className="lcd-lines">
-          {model.lines.map((l, i) => (
-            <div key={i} className={i === 0 && model.entry ? 'lcd-entry' : 'lcd-line'}>
-              {l || ' '}
-            </div>
-          ))}
-          {model.tone === 'busy' && <div className="lcd-busy" aria-hidden="true" />}
-        </div>
-        <div className="lcd-options">
-          {['2', '3', '4'].map((row) => (
-            <div className="lcd-row" key={row}>
-              <span>{slot('L' + row)?.label ? `‹ ${slot('L' + row).label}` : ''}</span>
-              <span>{slot('R' + row)?.label ? `${slot('R' + row).label} ›` : ''}</span>
-            </div>
-          ))}
-        </div>
-        {model.footer && <div className="lcd-footer">{model.footer}</div>}
+        {model.lines.map((l, i) => (
+          <div key={i} className={i === 0 && model.entry ? 'lcd-entry' : 'lcd-line'}>
+            {l || ' '}
+          </div>
+        ))}
+        {model.tone === 'busy' && <div className="lcd-busy" aria-hidden="true" />}
       </div>
-      <div className="fdk-col">{side('R')}</div>
+      {['2', '3', '4'].map((row, i) => (
+        <Fragment key={row}>
+          {sideKey('L' + row, i + 2)}
+          <div className="opt-row" style={{ gridRow: i + 2 }}>
+            {option('L' + row)}
+            {option('R' + row)}
+          </div>
+          {sideKey('R' + row, i + 2)}
+        </Fragment>
+      ))}
+      <div className="lcd-foot">{model.footer || ' '}</div>
     </div>
   );
 }
@@ -79,6 +101,11 @@ export default function Operator({ atm }) {
   return (
     <div className="operator">
       <Mirror model={atm.model} onSlot={atm.pressSlot} />
+      {atm.model.options.length > 0 && (
+        <p className="mirror-hint">
+          Tap an option, press its lit side key, or type its number.
+        </p>
+      )}
       <HardwareActions atm={atm} />
       <div className="keypad" role="group" aria-label="PIN pad">
         {KEYS.flat().map((k, i) =>

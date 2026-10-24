@@ -24,8 +24,12 @@ const SCREEN_TEXT = {
   R4: { name: 'Screen Opt R4', size: 6, width: 66, height: 9, align: 2 },
 };
 
+const OPTION_SLOTS = ['L2', 'L3', 'L4', 'R2', 'R3', 'R4'];
 const TONES = { normal: '#0b2238', busy: '#0b2238', alert: '#3b1016', success: '#0d3324' };
 const COLORS = { teal: '#13e0a0', amber: '#ff9a1f', green: '#2bd46b', red: '#ff3344', off: '#2a2f36' };
+// Side keys light up when they have an option next to them, so it's clear which ones do something.
+const FDK_COLORS = { active: '#2de2c4', idle: '#4a525c' };
+const BUTTON_COLORS = { rest: '#15406b', pressed: '#2f7bc0' };
 
 const add = (a, b) => ({ x: a.x + (b.x || 0), y: a.y + (b.y || 0), z: a.z + (b.z || 0) });
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -166,6 +170,13 @@ export function createRig(bridge) {
       await move(groupName, {}, 110, 'out');
     },
 
+    // Brief highlight on the on-screen button for a chosen option.
+    async flashOption(slot) {
+      color(`Screen Btn ${slot}`, BUTTON_COLORS.pressed);
+      await wait(180);
+      color(`Screen Btn ${slot}`, BUTTON_COLORS.rest);
+    },
+
     // --- security hardware ---------------------------------------------------------------
     setSkimmer(on) {
       bridge.update('Skimmer', { visible: on });
@@ -186,9 +197,17 @@ export function createRig(bridge) {
     renderScreen(model) {
       const values = { title: model.title, footer: model.footer };
       [0, 1, 2].forEach((i) => (values[`line${i}`] = model.lines[i] || ''));
-      ['L2', 'L3', 'L4', 'R2', 'R3', 'R4'].forEach((slot) => {
+      OPTION_SLOTS.forEach((slot) => {
         const o = model.options.find((x) => x.slot === slot);
         values[slot] = o ? (slot[0] === 'L' ? `‹ ${o.label}` : `${o.label} ›`) : '';
+        // Each option sits on a tappable button panel; empty slots hide it and dim their side key.
+        const active = !!o;
+        if (shown[`on${slot}`] !== active) {
+          shown[`on${slot}`] = active;
+          bridge.update(`Screen Btn ${slot}`, { visible: active });
+          bridge.update(`Screen Btn ${slot} Edge`, { visible: active });
+          color(`FDK ${slot}`, active ? FDK_COLORS.active : FDK_COLORS.idle);
+        }
       });
       for (const [k, text] of Object.entries(values)) {
         const spec = SCREEN_TEXT[k];
@@ -223,6 +242,9 @@ export function createRig(bridge) {
       rig.resetReceipt();
       rig.setSkimmer(skimmer);
       rig.setPinhole(pinhole);
+      // The top side keys never carry an option.
+      color('FDK L1', FDK_COLORS.idle);
+      color('FDK R1', FDK_COLORS.idle);
     },
   };
   return rig;

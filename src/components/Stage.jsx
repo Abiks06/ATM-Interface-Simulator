@@ -31,7 +31,7 @@ export default function Stage({ iframeRef, status, mode, autoCamera, onAutoCamer
             <input type="checkbox" checked={autoCamera} onChange={(e) => onAutoCamera(e.target.checked)} />
             <span>Follow the action</span>
           </label>
-          <span className="stage-hint">Click the card, keys and side buttons in 3D</span>
+          <span className="stage-hint">Tap the on-screen options, or the lit side keys</span>
         </div>
       )}
       {children}

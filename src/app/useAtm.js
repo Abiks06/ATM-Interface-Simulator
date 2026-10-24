@@ -281,7 +281,11 @@ export function useAtm({ rig, active, autoCamera, homeShot = 'operate' }) {
       const m = describe(cur);
       if (/^\d$/.test(key) && !m.entry && m.options.length) {
         const o = optionForDigit(m, key);
-        if (o) dispatch({ type: 'OPTION', id: o.id });
+        if (o) {
+          rigRef.current?.pressKey(`FDK ${o.slot}`);
+          rigRef.current?.flashOption(o.slot);
+          dispatch({ type: 'OPTION', id: o.id });
+        }
         return;
       }
       if (cur.screen === S.IDLE && key === 'enter') {
@@ -299,20 +303,19 @@ export function useAtm({ rig, active, autoCamera, homeShot = 'operate' }) {
       sounds.key();
       rigRef.current?.pressKey(`FDK ${slot}`);
       const o = optionForSlot(describe(stateRef.current), slot);
-      if (o) dispatch({ type: 'OPTION', id: o.id });
+      if (!o) return;
+      rigRef.current?.flashOption(slot);
+      dispatch({ type: 'OPTION', id: o.id });
     },
     [dispatch, rigRef],
   );
 
   const chooseOption = useCallback(
     (id) => {
-      touch();
-      sounds.key();
       const o = describe(stateRef.current).options.find((x) => x.id === id);
-      if (o) rigRef.current?.pressKey(`FDK ${o.slot}`);
-      dispatch({ type: 'OPTION', id });
+      if (o) pressSlot(o.slot);
     },
-    [dispatch, rigRef],
+    [pressSlot],
   );
 
   const insertCard = useCallback(
@@ -337,7 +340,8 @@ export function useAtm({ rig, active, autoCamera, homeShot = 'operate' }) {
         if (/^\d$/.test(k)) pressKey(k);
         else if (KEY_GROUP[k.toLowerCase()]) pressKey(k.toLowerCase());
         else rigRef.current?.pressKey(`Key ${k}`);
-      } else if ((m = name.match(/^FDK ([LR]\d)$/))) {
+      } else if ((m = name.match(/^(?:FDK|Screen Btn|Screen Opt) ([LR]\d)(?: Edge)?$/))) {
+        // Side keys and the on-screen buttons (touchscreen) select the same option.
         pressSlot(m[1]);
       } else if (/^(Card (Body|Chip|Stripe|Slot|Throat|Reader Bezel))$/.test(name)) {
         if (screen === S.IDLE) insertCard('chip');
