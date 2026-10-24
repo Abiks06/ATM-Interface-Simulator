@@ -16,7 +16,7 @@ function createWindow() {
   win.setMenuBarVisibility(false);
 
   if (process.env.NODE_ENV === 'development') {
-    win.loadURL('http://localhost:5174');
+    win.loadURL('http://localhost:5173');
   } else {
     // In production, load the built dist folder
     win.loadFile(path.join(__dirname, 'dist', 'index.html'));
