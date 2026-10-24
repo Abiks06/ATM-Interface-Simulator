@@ -1,5 +1,7 @@
 # Secure ATM Simulator
 
+**Live demo: https://atm-interface-simulator.vercel.app**
+
 An ATM simulator that explains how a real cash machine keeps your money safe, built around an interactive 3D machine made in [Spline](https://spline.design).
 
 - **Walkthrough:** a guided 3D tour, one stop per layer of defence: chip reader, contactless, encrypting PIN pad, privacy design, card-before-cash dispensing and the audit journal.
