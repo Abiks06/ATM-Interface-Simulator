@@ -9,5 +9,10 @@
     "An attack lab stages skimming, brute-force, replay and insider log-tampering attacks, and shows each defence respond, including a SHA-256 hash-chained audit journal that exposes any edit.",
     "A pure state-machine core with hold-before-debit money handling and exact bounded-knapsack note dispensing, covered by 44 unit tests."
   ],
-  "keywords": ["React", "Web Crypto", "Spline", "State machine", "Vitest"]
+  "keywords": ["React", "Web Crypto", "Spline", "State machine", "Vitest"],
+  "screenshot": {
+    "gpu": true,
+    "waitForHidden": ".stage-veil",
+    "delay": 6000
+  }
 }
