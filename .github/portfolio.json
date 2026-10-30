@@ -9,7 +9,57 @@
     "An attack lab stages skimming, brute-force, replay and insider log-tampering attacks, and shows each defence respond, including a SHA-256 hash-chained audit journal that exposes any edit.",
     "A pure state-machine core with hold-before-debit money handling and exact bounded-knapsack note dispensing, covered by 44 unit tests."
   ],
-  "keywords": ["React", "Web Crypto", "Spline", "State machine", "Vitest"],
+  "keywords": [
+    "React",
+    "Web Crypto",
+    "Spline",
+    "State machine",
+    "Vitest"
+  ],
+  "tracks": [
+    "backend",
+    "fullstack"
+  ],
+  "metrics": [
+    {
+      "value": "44",
+      "label": "unit tests on the state machine, PIN blocks, bank host, dispenser and journal",
+      "headline": true
+    },
+    {
+      "value": "4",
+      "label": "attacks staged in the attack lab: skimming, brute force, replay, log tampering"
+    },
+    {
+      "value": "3",
+      "label": "wrong PINs and the bank blocks the card, counted bank-side"
+    }
+  ],
+  "pipeline": [
+    "Spline 3D scene",
+    "React UI",
+    "Pure state machine",
+    "Encrypting PIN pad",
+    "Bank host: PBKDF2 · ARQC · holds",
+    "Hash-chained journal"
+  ],
+  "decisions": [
+    {
+      "choice": "Hold the money first, settle when the cash is taken",
+      "over": "Debiting before dispensing",
+      "because": "v1 charged the customer even when the cash wasn't taken. Untaken cash is now retracted and the hold reversed."
+    },
+    {
+      "choice": "The PIN leaves the keypad only as an encrypted ISO 9564 block; the bank checks a salted PBKDF2 hash in constant time",
+      "over": "Holding and comparing the PIN in app state",
+      "because": "v1 kept the PIN in plain text in app and UI state."
+    },
+    {
+      "choice": "A pure step() function, with timers that carry a sequence number",
+      "over": "Chains of setTimeout calls",
+      "because": "Late timers could jump a session to a stale screen; stale ones are now dropped."
+    }
+  ],
   "screenshot": {
     "gpu": true,
     "waitForHidden": ".stage-veil",
