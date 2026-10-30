@@ -24,7 +24,7 @@
     {
       "value": "44",
       "label": "unit tests on the state machine, PIN blocks, bank host, dispenser and journal",
-      "headline": true
+      "headline": "Unit tests on the ATM core"
     },
     {
       "value": "4",
